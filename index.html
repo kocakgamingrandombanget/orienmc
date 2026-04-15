@@ -58,7 +58,7 @@
         .hamburger { display: none; background: rgba(255, 42, 42, 0.05); border: 1px solid var(--border-dim); width: 42px; height: 42px; border-radius: 50%; color: #fff; font-size: 1.2rem; cursor: pointer; transition: 0.3s; }
 
         .main-banner { width: 100%; margin-bottom: 20px; display: flex; justify-content: center; }
-        .banner-img { width: 100%; height: auto; border-radius: var(--radius-card); border: 2px solid rgba(255, 42, 42, 0.3); box-shadow: var(--neon-glow-strong); display: block; }
+        .banner-img { width: 100%; height: auto; border-radius: var(--radius-card); border: 2px solid rgba(255, 42, 42, 0.3); box-shadow: var(--neon-glow-strong); display: block; object-fit: cover; }
 
         .hero { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding-top: 20px; padding-bottom: 60px; }
         .badge { background-color: rgba(255, 42, 42, 0.1); color: var(--neon-red); border: 1px solid rgba(255, 42, 42, 0.3); padding: 8px 20px; border-radius: var(--radius-pill); font-size: 0.8rem; font-weight: 700; margin-bottom: 25px; letter-spacing: 1px; text-transform: uppercase; box-shadow: var(--neon-glow); }
@@ -124,17 +124,17 @@
 
     <header id="mainHeader">
         <div class="nav-content">
-            <a href="index.html" class="brand">
+            <a href="/" class="brand">
                 <img src="logo.png" alt="OrienMC Logo" class="brand-logo">
                 <span>ORIEN<span style="color: var(--neon-red);">MC</span></span>
             </a>
             
             <div class="header-controls">
                 <ul class="nav-links" id="navLinks">
-                    <li><a href="index.html" class="active-link"><span class="en">Home</span><span class="es">Inicio</span></a></li>
-                    <li><a href="modes.html"><span class="en">Game Modes</span><span class="es">Modos de Juego</span></a></li>
-                    <li><a href="rules.html"><span class="en">Rules & Info</span><span class="es">Reglas e Info</span></a></li>
-                    <li><a href="support.html"><span class="en">Support</span><span class="es">Soporte</span></a></li>
+                    <li><a href="/" class="active-link"><span class="en">Home</span><span class="es">Inicio</span></a></li>
+                    <li><a href="/modes"><span class="en">Game Modes</span><span class="es">Modos de Juego</span></a></li>
+                    <li><a href="/rules"><span class="en">Rules & Info</span><span class="es">Reglas e Info</span></a></li>
+                    <li><a href="/support"><span class="en">Support</span><span class="es">Soporte</span></a></li>
                     <li><a href="https://orienmc.tebex.io/" target="_blank" class="highlight"><i class="fa-solid fa-cart-shopping"></i> <span class="en">Store</span><span class="es">Tienda</span></a></li>
                 </ul>
 
@@ -148,10 +148,10 @@
     </header>
 
     <div class="mobile-menu" id="mobileMenu">
-        <a href="index.html"><i class="fa-solid fa-house"></i> <span class="en">Home</span><span class="es">Inicio</span></a>
-        <a href="modes.html"><i class="fa-solid fa-gamepad"></i> <span class="en">Game Modes</span><span class="es">Modos de Juego</span></a>
-        <a href="rules.html"><i class="fa-solid fa-scale-balanced"></i> <span class="en">Rules & Info</span><span class="es">Reglas e Info</span></a>
-        <a href="support.html"><i class="fa-solid fa-code"></i> <span class="en">Support</span><span class="es">Soporte</span></a>
+        <a href="/"><i class="fa-solid fa-house"></i> <span class="en">Home</span><span class="es">Inicio</span></a>
+        <a href="/modes"><i class="fa-solid fa-gamepad"></i> <span class="en">Game Modes</span><span class="es">Modos de Juego</span></a>
+        <a href="/rules"><i class="fa-solid fa-scale-balanced"></i> <span class="en">Rules & Info</span><span class="es">Reglas e Info</span></a>
+        <a href="/support"><i class="fa-solid fa-code"></i> <span class="en">Support</span><span class="es">Soporte</span></a>
         
         <div style="height: 1px; background: rgba(255,255,255,0.05); margin: 0.5rem 0;"></div>
         
@@ -160,7 +160,7 @@
 
     <main class="container">
         
-        <!-- BANNER SECTION -->
+        <!-- BANNER SECTION MP4 -->
         <div class="main-banner animate-up">
             <video autoplay loop muted playsinline class="banner-img">
                 <source src="banner.mp4" type="video/mp4">
@@ -280,7 +280,10 @@
 
         // Copy IP
         function copyIP() {
-            const ip = document.getElementById('ipAddress').innerText;
+            const ipElement = document.getElementById('ipAddress');
+            if (!ipElement) return;
+
+            const ip = ipElement.innerText;
             const portMatch = document.querySelector('.ip-port').innerText.match(/\d+/);
             const port = portMatch ? portMatch[0] : "19132";
             const fullAddress = `${ip}:${port}`;
@@ -302,24 +305,37 @@
 
         // Live Server Status
         async function fetchServerStatus() {
-            const serverIP = "play.orienmc.xyz"; const serverPort = 19132;
-            const statusText = document.getElementById('statusText'), playerCount = document.getElementById('playerCount'), statusDot = document.getElementById('statusDot');
+            const serverIP = "play.orienmc.xyz"; 
+            const serverPort = 19132;
+            
+            const statusText = document.getElementById('statusText');
+            const playerCount = document.getElementById('playerCount');
+            const statusDot = document.getElementById('statusDot');
+            
+            if (!statusText || !playerCount || !statusDot) return; 
+
             try {
                 const response = await fetch(`https://api.mcsrvstat.us/bedrock/3/${serverIP}:${serverPort}`);
                 const data = await response.json();
+
                 if (data.online) {
                     statusText.innerHTML = "<span class='en'>Server Online</span><span class='es'>Servidor en Línea</span>";
-                    statusText.style.color = "#fff"; statusDot.classList.add('online');
+                    statusText.style.color = "#fff";
+                    statusDot.classList.add('online');
                     playerCount.innerHTML = `<i class="fa-solid fa-users" style="color: var(--neon-red);"></i> ${data.players.online} / ${data.players.max}`;
                 } else {
                     statusText.innerHTML = "<span class='en'>Server Offline</span><span class='es'>Servidor Fuera de Línea</span>";
-                    statusText.style.color = "#ff5555"; statusDot.classList.remove('online'); statusDot.style.background = "#ff5555";
+                    statusText.style.color = "#ff5555";
+                    statusDot.classList.remove('online');
+                    statusDot.style.background = "#ff5555";
                     playerCount.innerHTML = `<i class="fa-solid fa-users" style="color: #555;"></i> 0 / 0`;
                 }
             } catch (error) {
-                statusText.innerHTML = "<span class='en'>Status Unknown</span><span class='es'>Estado Desconocido</span>"; playerCount.innerText = "";
+                statusText.innerHTML = "<span class='en'>Status Unknown</span><span class='es'>Estado Desconocido</span>";
+                playerCount.innerText = "";
             }
         }
+
         fetchServerStatus();
 
         document.getElementById('currentYear').textContent = new Date().getFullYear();
