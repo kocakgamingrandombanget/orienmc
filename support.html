@@ -56,6 +56,10 @@
         .btn-primary { background: linear-gradient(135deg, var(--neon-red), var(--neon-red-dark)); color: #fff; box-shadow: 0 4px 15px rgba(255, 42, 42, 0.2), inset 0 -3px 0 rgba(0,0,0,0.2); }
         .btn-primary:hover { transform: translateY(-4px) scale(1.03); box-shadow: 0 8px 25px rgba(255, 42, 42, 0.3), inset 0 -3px 0 rgba(0,0,0,0.1); color: #fff; }
 
+        /* --- Banner Section --- */
+        .main-banner { width: 100%; margin-bottom: 20px; display: flex; justify-content: center; }
+        .banner-img { width: 100%; height: auto; border-radius: var(--radius-card); border: 2px solid rgba(255, 42, 42, 0.3); box-shadow: var(--neon-glow-strong); display: block; object-fit: cover; }
+
         .plugin-banner { background-color: var(--surface-elevated); border-radius: var(--radius-card); padding: 40px; border: 1px solid rgba(255, 42, 42, 0.2); display: flex; align-items: center; justify-content: space-between; gap: 30px; position: relative; overflow: hidden; box-shadow: var(--neon-glow); }
         .plugin-banner::before { content: ''; position: absolute; top: 0; right: 0; width: 300px; height: 300px; background: radial-gradient(circle, rgba(255, 42, 42, 0.1) 0%, transparent 70%); border-radius: 50%; transform: translate(30%, -30%); pointer-events: none; }
         .plugin-content { position: relative; z-index: 1; }
@@ -144,6 +148,13 @@
     </div>
 
     <main class="container">
+
+        <!-- BANNER SECTION -->
+        <div class="main-banner animate-up">
+            <video autoplay loop muted playsinline class="banner-img">
+                <source src="banner.mp4" type="video/mp4">
+            </video>
+        </div>
         
         <section id="plugins">
             <h2 class="animate-up"><i class="fa-solid fa-code"></i> <span class="en">PocketMine Plugins</span><span class="es">Plugins de PocketMine</span></h2>
@@ -185,6 +196,10 @@
         <p style="font-size: 0.8rem; margin-top: 5px; opacity: 0.5;">
             <span class="en">Not affiliated with Mojang Studios or Microsoft.</span>
             <span class="es">No afiliado a Mojang Studios ni a Microsoft.</span>
+        </p>
+        <p style="font-size: 0.8rem; margin-top: 10px; opacity: 0.7;">
+            <span class="en">Supported by</span><span class="es">Apoyado por</span> 
+            <a href="https://heradigital.my.id" target="_blank" style="color: var(--neon-red); text-decoration: none; font-weight: 600;">Hera Digital</a>
         </p>
     </footer>
 
