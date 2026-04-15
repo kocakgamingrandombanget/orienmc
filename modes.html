@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OrienMC - Game Modes</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Outfit:wght@300;400;500;600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-dark: #0a0404; --surface: #140808; --surface-elevated: #1c0b0b;
+            --neon-red: #ff2a2a; --neon-red-dark: #cc0000; --neon-red-light: #ff5555;
+            --neon-glow: 0 0 15px rgba(255, 42, 42, 0.15), inset 0 0 10px rgba(255, 42, 42, 0.05);
+            --text-main: #e8e8e8; --text-dim: #a59b9b; --border-dim: #2a1515;
+            --radius-pill: 999px; --radius-card: 24px; --radius-small: 16px; 
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-dark); color: var(--text-main); font-size: 0.95rem; line-height: 1.6; overflow-x: hidden; background-image: radial-gradient(circle at 50% 0%, rgba(255, 42, 42, 0.05) 0%, transparent 50%); -webkit-user-select: none; user-select: none; }
+        .lang-en .es { display: none !important; }
+        .lang-es .en { display: none !important; }
+        img { user-drag: none; -webkit-user-drag: none; }
+
+        h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 25px; color: #fff; display: flex; align-items: center; gap: 12px; }
+        h2 i { color: var(--neon-red); text-shadow: 0 0 15px rgba(255,42,42,0.4); }
+        h3 { font-size: 1.15rem; font-weight: 600; margin-bottom: 8px; color: #fff; }
+        p { color: var(--text-dim); }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 120px 20px 40px; }
+        section { padding: 40px 0; }
+
+        header { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); width: 95%; max-width: 1000px; background-color: rgba(20, 8, 8, 0.8); backdrop-filter: blur(20px); z-index: 1000; border: 1px solid rgba(255, 42, 42, 0.2); border-radius: var(--radius-pill); box-shadow: 0 15px 40px rgba(0,0,0,0.8); transition: all 0.4s ease; }
+        .nav-content { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px 10px 25px; }
+        .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; transition: 0.3s; }
+        .brand-logo { height: 48px; width: auto; object-fit: contain; filter: drop-shadow(0 0 8px rgba(255, 42, 42, 0.6)); animation: floatGlow 3.5s ease-in-out infinite; transform-origin: center; }
+        @keyframes floatGlow { 0%, 100% { transform: translateY(0) scale(1); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8)) drop-shadow(0 0 8px rgba(255, 42, 42, 0.6)); } 50% { transform: translateY(-5px) scale(1.05); filter: drop-shadow(0 10px 8px rgba(0,0,0,0.5)) drop-shadow(0 0 18px var(--neon-red)); } }
+        .brand span { font-weight: 800; font-size: 1.3rem; color: #fff; letter-spacing: 1px; }
+
+        .header-controls { display: flex; align-items: center; gap: 15px; }
+        .lang-switch { display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 700; color: var(--text-dim); font-size: 0.85rem; user-select: none; transition: 0.3s; }
+        .lang-switch:hover { color: #fff; }
+        .lang-switch span.active { color: var(--neon-red); }
+
+        .nav-links { list-style: none; display: flex; gap: 5px; }
+        .nav-links a { text-decoration: none; color: var(--text-dim); font-weight: 500; padding: 8px 18px; border-radius: var(--radius-pill); transition: all 0.3s; font-size: 0.9rem; }
+        .nav-links a:hover, .nav-links a.active-link { background: rgba(255, 42, 42, 0.1); color: var(--neon-red-light); }
+        .nav-links a.highlight { background: rgba(255, 42, 42, 0.15); color: var(--neon-red); font-weight: 700; border: 1px solid rgba(255, 42, 42, 0.3); }
+
+        .hamburger { display: none; background: rgba(255, 42, 42, 0.05); border: 1px solid var(--border-dim); width: 42px; height: 42px; border-radius: 50%; color: #fff; font-size: 1.2rem; cursor: pointer; transition: 0.3s; }
+
+        .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+        .card { background-color: var(--surface-elevated); border-radius: var(--radius-card); padding: 30px; border: 1px solid rgba(255, 255, 255, 0.02); transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, transparent, var(--neon-red), transparent); opacity: 0; transition: 0.3s; }
+        .card:hover { border-color: rgba(255, 42, 42, 0.3); background-color: var(--surface); transform: translateY(-5px); box-shadow: var(--neon-glow); }
+        .card:hover::before { opacity: 1; }
+        .card-icon { width: 55px; height: 55px; margin-bottom: 20px; background: rgba(255, 42, 42, 0.08); color: var(--neon-red); border-radius: var(--radius-small); display: flex; justify-content: center; align-items: center; font-size: 1.5rem; border: 1px solid rgba(255, 42, 42, 0.15); }
+
+        footer { text-align: center; padding: 40px; color: var(--text-dim); background-color: #050202; border-top: 1px solid var(--border-dim); }
+        .footer-logo { margin-bottom: 15px; font-weight: 900; font-size: 1.5rem; color: #fff; }
+        .footer-logo span { color: var(--neon-red); }
+
+        .animate-up { opacity: 0; transform: translateY(30px); animation: slideUp 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        .delay-1 { animation-delay: 0.1s; }
+        @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+
+        .mobile-menu { display: none; }
+        @media (max-width: 992px) {
+            header { width: 95%; top: 15px; }
+            header.active { background-color: transparent; border-color: transparent; box-shadow: none; backdrop-filter: none; }
+            .hamburger { display: flex; justify-content: center; align-items: center; position: relative; z-index: 1000; }
+            .brand { position: relative; z-index: 1000; }
+            .nav-links { display: none !important; }
+
+            .mobile-menu { display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-color: var(--bg-dark); flex-direction: column; justify-content: flex-start; align-items: stretch; gap: 0; padding: 100px 25px 40px 25px; opacity: 0; visibility: hidden; transform: translateY(-20px); transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 900; overflow-y: auto; }
+            .mobile-menu.active { opacity: 1; visibility: visible; transform: translateY(0); }
+            
+            .mobile-menu a { display: flex; align-items: center; gap: 15px; padding: 20px 10px; font-size: 1.25rem; font-weight: 500; width: 100%; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.05); color: #fff; text-decoration: none; transition: all 0.3s; }
+            .mobile-menu a i { color: var(--text-dim); width: 25px; text-align: center; transition: 0.3s; }
+            .mobile-menu a:hover { background: transparent; color: var(--neon-red); padding-left: 20px; }
+            .mobile-menu a:hover i { color: var(--neon-red); }
+            .mobile-menu a.highlight { margin-top: 25px; justify-content: center; border: 1px solid var(--neon-red); border-radius: var(--radius-pill); background: rgba(255, 42, 42, 0.05); color: var(--neon-red); padding-left: 10px; }
+        }
+    </style>
+</head>
+<body class="lang-en">
+
+    <header id="mainHeader">
+        <div class="nav-content">
+            <a href="index.html" class="brand">
+                <img src="logo.png" alt="OrienMC Logo" class="brand-logo">
+                <span>ORIEN<span style="color: var(--neon-red);">MC</span></span>
+            </a>
+            
+            <div class="header-controls">
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="index.html"><span class="en">Home</span><span class="es">Inicio</span></a></li>
+                    <li><a href="modes.html" class="active-link"><span class="en">Game Modes</span><span class="es">Modos de Juego</span></a></li>
+                    <li><a href="rules.html"><span class="en">Rules & Info</span><span class="es">Reglas e Info</span></a></li>
+                    <li><a href="support.html"><span class="en">Support</span><span class="es">Soporte</span></a></li>
+                    <li><a href="https://orienmc.tebex.io/" target="_blank" class="highlight"><i class="fa-solid fa-cart-shopping"></i> <span class="en">Store</span><span class="es">Tienda</span></a></li>
+                </ul>
+
+                <div class="lang-switch" id="langToggle">
+                    <span class="en-label active">EN</span> <span style="color: var(--border-dim); font-weight: 300;">|</span> <span class="es-label">ES</span>
+                </div>
+
+                <button class="hamburger" id="hamburgerMenu"><i class="fa-solid fa-bars"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html"><i class="fa-solid fa-house"></i> <span class="en">Home</span><span class="es">Inicio</span></a>
+        <a href="modes.html"><i class="fa-solid fa-gamepad"></i> <span class="en">Game Modes</span><span class="es">Modos de Juego</span></a>
+        <a href="rules.html"><i class="fa-solid fa-scale-balanced"></i> <span class="en">Rules & Info</span><span class="es">Reglas e Info</span></a>
+        <a href="support.html"><i class="fa-solid fa-code"></i> <span class="en">Support</span><span class="es">Soporte</span></a>
+        
+        <div style="height: 1px; background: rgba(255,255,255,0.05); margin: 0.5rem 0;"></div>
+        
+        <a href="https://orienmc.tebex.io/" target="_blank" class="highlight"><i class="fa-solid fa-cart-shopping"></i> <span class="en">Visit Store</span><span class="es">Visitar Tienda</span></a>
+    </div>
+
+    <main class="container">
+        
+        <section id="modes">
+            <h2 class="animate-up"><i class="fa-solid fa-gamepad"></i> <span class="en">Game Modes</span><span class="es">Modos de Juego</span></h2>
+            <div class="grid-cards animate-up delay-1">
+                <div class="card">
+                    <div class="card-icon"><i class="fa-solid fa-cloud"></i></div>
+                    <h3>SkyWars</h3>
+                    <p class="en">Spawn on an island, loot chests, and battle others in the sky. Last player standing wins!</p>
+                    <p class="es">Aparece en una isla, saquea cofres y lucha contra otros en el cielo. ¡El último en pie gana!</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fa-solid fa-egg"></i></div>
+                    <h3>EggWars</h3>
+                    <p class="en">Protect your team's egg while destroying opponents'. Trade resources for better gear.</p>
+                    <p class="es">Protege el huevo de tu equipo mientras destruyes el de los oponentes. Intercambia recursos por mejor equipamiento.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fa-solid fa-music"></i></div>
+                    <h3>Block Party</h3>
+                    <p class="en">Dance to the music and stand on the correct color block before the floor disappears.</p>
+                    <p class="es">Baila al ritmo de la música y párate en el bloque del color correcto antes de que el suelo desaparezca.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fa-solid fa-khanda"></i></div>
+                    <h3>FFA (Free For All)</h3>
+                    <p class="en">Jump into the arena with standard kits and fight everyone. Fast-paced PvP action.</p>
+                    <p class="es">Salta a la arena con kits estándar y lucha contra todos. Acción PvP de ritmo rápido.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fa-solid fa-user-secret"></i></div>
+                    <h3>Murder Mystery</h3>
+                    <p class="en">Find out who the murderer is before they eliminate everyone, or be the murderer yourself.</p>
+                    <p class="es">Descubre quién es el asesino antes de que elimine a todos, o sé tú mismo el asesino.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h3>Survival Games</h3>
+                    <p class="en">Classic battle royale experience. Loot the cornucopia and survive the hunger games.</p>
+                    <p class="es">Experiencia clásica de battle royale. Saquea la cornucopia y sobrevive a los juegos del hambre.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fa-solid fa-tree"></i></div>
+                    <h3>Survival</h3>
+                    <p class="en">Relax, claim your land, build your base, and trade in our custom economy SMP.</p>
+                    <p class="es">Relájate, reclama tu tierra, construye tu base y comercia en nuestro SMP de economía personalizada.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="footer-logo">ORIEN<span>MC</span></div>
+        <p>&copy; <span id="currentYear">2026</span> OrienMC Network. <span class="en">All rights reserved.</span><span class="es">Todos los derechos reservados.</span></p>
+        <p style="font-size: 0.8rem; margin-top: 5px; opacity: 0.5;">
+            <span class="en">Not affiliated with Mojang Studios or Microsoft.</span>
+            <span class="es">No afiliado a Mojang Studios ni a Microsoft.</span>
+        </p>
+    </footer>
+
+    <script>
+        // Language Toggle with LocalStorage
+        const langToggle = document.getElementById('langToggle');
+        const enLabel = langToggle.querySelector('.en-label');
+        const esLabel = langToggle.querySelector('.es-label');
+        
+        const savedLang = localStorage.getItem('orienmc_lang') || 'lang-en';
+        document.body.className = savedLang;
+        if (savedLang === 'lang-es') {
+            enLabel.classList.remove('active');
+            esLabel.classList.add('active');
+        }
+
+        langToggle.addEventListener('click', () => {
+            const body = document.body;
+            if (body.classList.contains('lang-en')) {
+                body.className = 'lang-es';
+                enLabel.classList.remove('active');
+                esLabel.classList.add('active');
+                localStorage.setItem('orienmc_lang', 'lang-es');
+            } else {
+                body.className = 'lang-en';
+                esLabel.classList.remove('active');
+                enLabel.classList.add('active');
+                localStorage.setItem('orienmc_lang', 'lang-en');
+            }
+        });
+
+        // Mobile Menu Toggle
+        const hamburger = document.getElementById('hamburgerMenu');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mainHeader = document.getElementById('mainHeader');
+        const icon = hamburger.querySelector('i');
+
+        hamburger.addEventListener('click', (e) => {
+            e.stopPropagation(); 
+            mobileMenu.classList.toggle('active');
+            mainHeader.classList.toggle('active');
+            if(mobileMenu.classList.contains('active')) {
+                icon.classList.replace('fa-bars', 'fa-xmark');
+                document.body.style.overflow = 'hidden';
+            } else {
+                icon.classList.replace('fa-xmark', 'fa-bars');
+                document.body.style.overflow = '';
+            }
+        });
+
+        window.addEventListener('click', (e) => {
+            if (!mobileMenu.contains(e.target) && !hamburger.contains(e.target) && !langToggle.contains(e.target)) {
+                mobileMenu.classList.remove('active');
+                mainHeader.classList.remove('active');
+                icon.classList.replace('fa-xmark', 'fa-bars');
+                document.body.style.overflow = '';
+            }
+        });
+
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // Security
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.addEventListener('dragstart', event => event.preventDefault());
+        document.addEventListener('selectstart', event => event.preventDefault());
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F12' || e.keyCode === 123) { e.preventDefault(); return false; }
+            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.keyCode === 73)) { e.preventDefault(); return false; }
+            if (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j' || e.keyCode === 74)) { e.preventDefault(); return false; }
+            if (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.keyCode === 85)) { e.preventDefault(); return false; }
+            if (e.ctrlKey && (e.key === 'S' || e.key === 's' || e.keyCode === 83)) { e.preventDefault(); return false; }
+            if (e.ctrlKey && (e.key === 'C' || e.key === 'c' || e.keyCode === 67)) { e.preventDefault(); return false; }
+        });
+    </script>
+</body>
+</html>
